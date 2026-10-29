@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { isExpired, login as apiLogin } from '../api/auth.js';
-import { fetchProfile } from '../api/profile.js';
+import { fetchProfile, toBasicProfile } from '../api/profile.js';
+import { useProfileStore } from './profileStore.js';
 import { toApiError } from '../api/errors.js';
 import { clearSessionData, KEYS, session as store } from '../utils/storage.js';
 
@@ -31,7 +32,6 @@ export const useAuthStore = create((set, get) => ({
       const sess = await apiLogin(username, password);
       store.set(KEYS.session, sess);
       set({ session: sess, loggingIn: false });
-      get().loadProfile();
       return true;
     } catch (err) {
       set({ error: toApiError(err), loggingIn: false });
@@ -39,22 +39,34 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  /** Name and roll number only. Optional: the app works without it. */
+  /**
+   * Fetches the profile. Name + roll number go to sessionStorage (for the header);
+   * the full details (mobile, address, Aadhaar) stay in the memory-only profile store.
+   * Called on login and on every app load, so the details are never persisted.
+   */
   loadProfile: async () => {
     const sess = get().session;
-    if (!sess) return;
+    const profileStore = useProfileStore.getState();
+    if (!sess || profileStore.status === 'loading') return;
+    profileStore.setLoading();
     try {
-      const profile = await fetchProfile(sess);
-      store.set(KEYS.profile, profile);
-      set({ profile });
+      const details = await fetchProfile(sess);
+      if (get().session !== sess) return; // logged out meanwhile
+      const basic = toBasicProfile(details);
+      store.set(KEYS.profile, basic);
+      set({ profile: basic });
+      useProfileStore.getState().setDetails(details);
     } catch (err) {
-      if (toApiError(err).code === 'unauthorized') get().logout('expired');
+      const e = toApiError(err);
+      useProfileStore.getState().setError(e);
+      if (e.code === 'unauthorized') get().logout('expired');
     }
   },
 
   /** reason: 'expired' | 'logout' | null */
   logout: (reason = 'logout') => {
     clearSessionData();
+    useProfileStore.getState().clear();
     set({ session: null, profile: null, notice: reason, error: null, loggingIn: false });
   },
 

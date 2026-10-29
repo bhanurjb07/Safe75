@@ -82,7 +82,8 @@ export default function About() {
               </li>
               <li className="flex gap-2">
                 <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-safe-ink" aria-hidden="true" />
-                Only your name, roll number and semester are shown. Nothing else from your profile is kept.
+
+                Your mobile, address and Aadhaar appear only on your Profile page, are held in memory for this session, and are never saved, logged or shared.
               </li>
             </ul>
           </motion.section>

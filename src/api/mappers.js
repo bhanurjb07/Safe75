@@ -167,19 +167,3 @@ export function mapSemesters(raw) {
       courseName: s.courseName ?? '',
     }));
 }
-
-/** Endpoint C → only name and roll number. Everything else in the response is discarded. */
-export function mapProfile(raw) {
-  const src = Array.isArray(raw) ? raw[0] : raw;
-  if (!src || typeof src !== 'object') throw new ApiError('shape', 'The ERP profile response was empty.');
-  const clean = (v) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim() : '');
-  const title = (v) => clean(v).toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase());
-  const firstName = title(src.firstName);
-  const fullName = [src.firstName, src.middleName, src.lastName].map(title).filter(Boolean).join(' ');
-  return {
-    firstName: firstName || 'Student',
-    fullName: fullName || 'Student',
-    loginName: clean(src.loginName),
-    rollNumber: clean(src.rollNumber) || clean(src.admissionNumber),
-  };
-}

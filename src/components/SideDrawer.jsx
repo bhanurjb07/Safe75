@@ -11,6 +11,7 @@ import {
   Moon,
   Share2,
   Sun,
+  UserRound,
   X,
 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -173,6 +174,7 @@ export default function SideDrawer({ open, onClose }) {
 
             <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
               <motion.ul initial="hidden" animate="show" variants={stagger(0.04, 0.12)} className="space-y-1">
+                <Item icon={UserRound} label="Profile" hint="Your details and contact info" tone="text-a1" onClick={() => go('/profile')} />
                 <Item
                   icon={Bell}
                   label="Notifications"

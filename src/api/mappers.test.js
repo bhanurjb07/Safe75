@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { mapAttendance, mapProfile, mapSession } from './mappers.js';
+import { describeShape } from '../store/debugStore.js';
+import { redact } from './errors.js';
+import { mapAttendance, mapSession } from './mappers.js';
+import { mapProfile, toBasicProfile } from './profile.js';
 
 // Small made-up fixture in the ERP's response shape.
 const attendanceFixture = {
@@ -94,18 +97,59 @@ describe('mapSession', () => {
 });
 
 describe('mapProfile', () => {
-  it('keeps only name and roll number', () => {
-    const p = mapProfile({
-      firstName: 'JANE',
+  // Made-up values only.
+  const raw = {
+    firstName: 'JANE',
+    middleName: '',
+    lastName: 'DOE',
+    rollNumber: 'R-001',
+    admissionNumber: 'ADM-9',
+    phone: '9000000001',
+    smsMobileNumber: '9000000002',
+    address: '  12  Sample   Street ',
+    aadhaarNumber: '1111 2222 3333',
+    fatherName: 'X',
+    marks: [1, 2, 3],
+    userDetails: '{"aadhaarNumber":"999999999999"}',
+  };
+
+  it('returns exactly the approved shape, nothing else', () => {
+    expect(mapProfile(raw)).toEqual({
+      firstName: 'Jane',
       middleName: '',
-      lastName: 'DOE',
-      loginName: 'jdoe',
+      lastName: 'Doe',
       rollNumber: 'R-001',
-      aadharNumber: '0000',
-      mobileNumber: '999',
-      fatherName: 'X',
+      admissionNumber: 'ADM-9',
+      mobile: '9000000001',
+      address: '12 Sample Street',
+      aadhaar: '111122223333',
     });
-    expect(p).toEqual({ firstName: 'Jane', fullName: 'Jane Doe', loginName: 'jdoe', rollNumber: 'R-001' });
+  });
+
+  it('falls back to smsMobileNumber, addressLine1 and the userDetails JSON string', () => {
+    const p = mapProfile({ firstName: 'a', smsMobileNumber: '9000000002', addressLine1: 'Line 1', userDetails: '{"aadhaarNumber":"444455556666"}' });
+    expect(p).toMatchObject({ mobile: '9000000002', address: 'Line 1', aadhaar: '444455556666' });
+  });
+
+  it('copes with missing or broken fields', () => {
+    expect(mapProfile({ firstName: 'a', userDetails: '{not json' })).toMatchObject({ mobile: null, address: null, aadhaar: null });
+    expect(mapProfile({ firstName: 'a', aadhaarNumber: '123' }).aadhaar).toBeNull();
+  });
+
+  it('basic profile (the only part persisted) has no contact fields', () => {
+    const basic = toBasicProfile(mapProfile(raw));
+    expect(basic).toEqual({ firstName: 'Jane', fullName: 'Jane Doe', rollNumber: 'R-001' });
+  });
+});
+
+describe('redaction of personal data', () => {
+  it('strips Aadhaar, phone numbers and keyed contact fields from error text', () => {
+    const text = redact('bad {"phone":"9000000001","address":"12 Sample St","aadhaarNumber":"1111 2222 3333"} call 9000000001 id 111122223333');
+    expect(text).not.toMatch(/9000000001|1111|Sample St/);
+  });
+  it('the debug shape never lists contact keys', () => {
+    const shape = describeShape({ phone: 'x', address: 'y', aadhaarNumber: 'z', userDetails: '{}', rollNumber: 'r' });
+    expect(Object.keys(shape)).toEqual(['rollNumber', '(hidden personal fields)']);
   });
 });
 

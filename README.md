@@ -90,7 +90,8 @@ Headline numbers come from `overallPresent` / `overallLecture` / `overallPercent
 - The password is sent only to the ERP (through the proxy). It is never logged or stored, and the field clears as soon as you submit.
 - Login tokens live in **sessionStorage** only. A refresh keeps you signed in; closing the tab ends the session. Tokens never go into URLs.
 - On any 401, or once `.expires` passes, the session is cleared and you return to the login screen with "Session expired".
-- From the profile endpoint, only first/middle/last name, login name and roll number are kept. Everything else in that response (very sensitive personal data) is dropped immediately and never displayed, logged or stored.
+- From the profile endpoint, `mapProfile` (in `src/api/profile.js`) picks only: first/middle/last name, roll number, admission number, mobile, address and Aadhaar. Everything else in that response is dropped immediately. Only name and roll number are kept in sessionStorage (for the header); mobile, address and Aadhaar live in a memory-only store, are re-fetched on every login or page load, are cleared on logout, and are stripped from the debug panel, error messages and the share image.
+- The Profile page displays the student's own mobile number, address, and Aadhaar number (masked by default) as returned by the college ERP. This data is held in memory only for the duration of the session and is never persisted to local storage, logged, or transmitted anywhere except back to the ERP's own API. If you deploy this app for others to use, each user only ever sees their own data via their own login — there is no shared storage of this information.
 - The last successful attendance data is cached in sessionStorage so the app still shows it if the network drops ("Offline · Last updated 10:42 AM"). Logout clears everything.
 - The share image includes your first name and attendance only.
 - `localStorage` holds just the theme preference.
@@ -104,7 +105,8 @@ Add `?debug=1` to any URL (and `?debug=0` to turn it off). The panel shows mode,
 ## Features
 
 - Animated login with parallax aurora background, show/hide password, friendly errors
-- Side drawer (tap your avatar): name, roll number, semester, Notifications, AKTU Result (opens the One View portal), Reports & export, share card, Contact & About, theme, sign out
+- Profile page: name, roll and admission number, semester, plus a Contact details card (mobile, address, Aadhaar masked to the last 4 digits with a 10-second reveal, copy buttons)
+- Side drawer (tap your avatar): name, roll number, semester, Profile, Notifications, AKTU Result (opens the One View portal), Reports & export, share card, Contact & About, theme, sign out
 - Dashboard: present/total with a self-drawing ring, "Can skip N" / "Need N" pill, Plan button, weekly present-vs-absent bar chart with week navigation, stat cards, insights, subjects sorted by risk, confetti when safe, shake/pulse when in danger
 - Plan attendance sheet: simulate upcoming present / absent classes, plus PC (past absences changed to present: +1 present, total unchanged, capped at your absences), for overall or any subject, and watch the ring, fraction and pill update
 - Days with several classes of a subject show every mark in one row (e.g. "A A", "P A"), in the subject's daily records and the History day sheet

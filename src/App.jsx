@@ -19,6 +19,7 @@ const History = lazy(() => import('./pages/History.jsx'));
 const Planner = lazy(() => import('./pages/Planner.jsx'));
 const Insights = lazy(() => import('./pages/Insights.jsx'));
 const Notifications = lazy(() => import('./pages/Notifications.jsx'));
+const Profile = lazy(() => import('./pages/Profile.jsx'));
 const Reports = lazy(() => import('./pages/Reports.jsx'));
 const About = lazy(() => import('./pages/About.jsx'));
 
@@ -76,6 +77,7 @@ function AnimatedRoutes() {
           <Route path="history" element={page(<History />)} />
           <Route path="planner" element={page(<Planner />)} />
           <Route path="insights" element={page(<Insights />)} />
+          <Route path="profile" element={page(<Profile />)} />
           <Route path="notifications" element={page(<Notifications />)} />
           <Route path="reports" element={page(<Reports />)} />
           <Route path="about" element={page(<About />)} />

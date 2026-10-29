@@ -66,7 +66,8 @@ export async function proxyRequest({ endpoint, method = 'GET', headers = {}, bod
   }
 
   const ms = Math.round(performance.now() - started);
-  const shape = describeShape(data);
+  // The profile endpoint carries personal data: log only its status and timing, no shape.
+  const shape = endpoint.startsWith('/api/User') ? '(profile response: shape not logged)' : describeShape(data);
   useDebugStore.getState().log({ ...logEntry, status: res.status, ms, shape });
 
   if (res.status === 401 || res.status === 403 || isAuthDenied(data)) {

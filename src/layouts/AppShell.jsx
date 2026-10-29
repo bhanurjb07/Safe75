@@ -35,7 +35,7 @@ export const NAV = [
 ];
 
 // Pages reached from the side drawer (not in the tab bar).
-const EXTRA_TITLES = { '/notifications': 'Notifications', '/reports': 'Reports & export', '/about': 'Contact & About' };
+const EXTRA_TITLES = { '/profile': 'Profile', '/notifications': 'Notifications', '/reports': 'Reports & export', '/about': 'Contact & About' };
 
 function HeaderActions({ onMenu }) {
   const navigate = useNavigate();
@@ -250,9 +250,16 @@ export default function AppShell() {
     NAV.find((n) => (n.to === '/' ? location.pathname === '/' : location.pathname.startsWith(n.to))) ??
     (EXTRA_TITLES[location.pathname] ? { title: EXTRA_TITLES[location.pathname] } : undefined);
 
+  const loadProfile = useAuthStore((s) => s.loadProfile);
+
   useEffect(() => {
     if (hasSession) load();
   }, [hasSession, load]);
+
+  // The full profile lives in memory only, so fetch it on every login and page load.
+  useEffect(() => {
+    if (hasSession) loadProfile();
+  }, [hasSession, loadProfile]);
 
   useEffect(() => {
     document.title = `${current?.title ?? 'Safe75'} · Safe75`;
@@ -339,8 +346,8 @@ export default function AppShell() {
           <footer className="mt-12 border-t border-line/10 pt-5 text-center text-xs leading-relaxed text-subtle">
             <p className="flex items-center justify-center gap-1.5">
               <Lock className="h-3 w-3" aria-hidden="true" />
-              Your password goes only to your college ERP and is never stored. Safe75 keeps just your name, roll number and
-              attendance, in this tab only.
+              Your password goes only to your college ERP and is never stored. Your attendance and details stay in this tab only;
+              contact details are never saved at all.
             </p>
             <p className="mt-1">Unofficial tool · not affiliated with your college.</p>
           </footer>
