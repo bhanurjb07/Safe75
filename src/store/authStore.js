@@ -50,12 +50,12 @@ export const useAuthStore = create((set, get) => ({
     if (!sess || profileStore.status === 'loading') return;
     profileStore.setLoading();
     try {
-      const details = await fetchProfile(sess);
+      const { details, view } = await fetchProfile(sess);
       if (get().session !== sess) return; // logged out meanwhile
       const basic = toBasicProfile(details);
       store.set(KEYS.profile, basic);
       set({ profile: basic });
-      useProfileStore.getState().setDetails(details);
+      useProfileStore.getState().setDetails(details, view);
     } catch (err) {
       const e = toApiError(err);
       useProfileStore.getState().setError(e);

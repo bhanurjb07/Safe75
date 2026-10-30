@@ -1,7 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Copy, Eye, EyeOff, GraduationCap, Hash, IdCard, Info, Lock, MapPin, Phone, RefreshCw, UserRound } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { PROFILE_TABS } from '../api/profileSchema.js';
 import PageHeader from '../components/PageHeader.jsx';
+import { CompletionCard, TabPanel } from '../components/ProfileSections.jsx';
+import Segmented from '../components/Segmented.jsx';
 import { Skeleton } from '../components/Skeleton.jsx';
 import { initials } from '../components/SideDrawer.jsx';
 import { useSemesterLabel } from '../store/attendanceStore.js';
@@ -127,8 +131,11 @@ function AadhaarValue({ digits }) {
 export default function Profile() {
   const basic = useAuthStore((s) => s.profile);
   const loadProfile = useAuthStore((s) => s.loadProfile);
-  const { details, status, error } = useProfileStore();
+  const { details, view, status, error } = useProfileStore();
   const semester = useSemesterLabel();
+  const [params, setParams] = useSearchParams();
+  const tab = PROFILE_TABS.some((t) => t.value === params.get('tab')) ? params.get('tab') : 'overview';
+  const setTab = (t) => setParams(t === 'overview' ? {} : { tab: t }, { replace: true });
 
   const fullName = details ? [details.firstName, details.middleName, details.lastName].filter(Boolean).join(' ') : basic?.fullName;
   const roll = details?.rollNumber || basic?.rollNumber;
@@ -136,7 +143,31 @@ export default function Profile() {
   return (
     <>
       <PageHeader eyebrow="You" title="Profile" />
+
+      <div className="scrollbar-none -mx-4 mb-5 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+        <Segmented label="Profile sections" options={PROFILE_TABS} value={tab} onChange={setTab} className="glass min-w-max" />
+      </div>
+
+      {tab !== 'overview' ? (
+        view ? (
+          <TabPanel tab={tab} view={view} />
+        ) : status === 'error' ? (
+          <div role="alert" className="rounded-2xl bg-danger/10 p-4 text-sm">
+            <p className="font-semibold text-danger-ink">Couldn&apos;t load your profile</p>
+            <p className="mt-1 text-muted">{error?.message}</p>
+            <button type="button" onClick={loadProfile} className="btn-ghost mt-3">
+              <RefreshCw className="h-4 w-4" aria-hidden="true" /> Try again
+            </button>
+          </div>
+        ) : (
+          <div className="grid gap-5 lg:grid-cols-2" role="status" aria-label="Loading profile">
+            <Skeleton className="h-64 !rounded-3xl" />
+            <Skeleton className="h-64 !rounded-3xl" />
+          </div>
+        )
+      ) : (
       <motion.div initial="hidden" animate="show" variants={stagger(0.08)} className="grid gap-5 lg:grid-cols-[0.9fr_1.1fr]">
+        {view && <CompletionCard completion={view.completion} />}
         {/* Identity */}
         <motion.section variants={fadeUp} className="card overflow-hidden">
           <div className="relative bg-accent-gradient px-6 pb-6 pt-7 text-white">
@@ -218,6 +249,7 @@ export default function Profile() {
           )}
         </motion.section>
       </motion.div>
+      )}
 
       <motion.p
         initial={{ opacity: 0 }}
