@@ -22,7 +22,7 @@ function wrap(ctx, text, maxWidth) {
 
 export async function drawShareCard({ firstName, percentage, status, advice }) {
   await document.fonts?.ready;
-  const font = '"Plus Jakarta Sans Variable", "Plus Jakarta Sans", system-ui, sans-serif';
+  const font = '"JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace';
   const meta = statusMeta(status);
   const canvas = document.createElement('canvas');
   canvas.width = W;
@@ -30,31 +30,31 @@ export async function drawShareCard({ firstName, percentage, status, advice }) {
   const ctx = canvas.getContext('2d');
 
   // Background + aurora
-  ctx.fillStyle = '#060918';
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, W, H);
   const blob = (x, y, r, color) => {
     const g = ctx.createRadialGradient(x, y, 0, x, y, r);
     g.addColorStop(0, color);
-    g.addColorStop(1, 'rgba(6,9,24,0)');
+    g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
   };
-  blob(120, 80, 700, 'rgba(99,102,241,0.55)');
-  blob(1000, 260, 600, 'rgba(139,92,246,0.45)');
-  blob(560, 1350, 700, 'rgba(34,211,238,0.28)');
+  blob(120, 80, 700, 'rgba(0,255,102,0.22)');
+  blob(1000, 260, 600, 'rgba(0,255,102,0.12)');
+  blob(560, 1350, 700, 'rgba(0,255,102,0.14)');
 
   // Brand
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#00ff66';
   ctx.font = `800 52px ${font}`;
   ctx.fillText('Safe', 90, 140);
   const safeW = ctx.measureText('Safe').width;
   const brand = ctx.createLinearGradient(90 + safeW, 0, 90 + safeW + 70, 0);
-  brand.addColorStop(0, '#8b5cf6');
-  brand.addColorStop(1, '#22d3ee');
+  brand.addColorStop(0, '#00ff66');
+  brand.addColorStop(1, '#96ffbe');
   ctx.fillStyle = brand;
   ctx.fillText('75', 90 + safeW, 140);
 
-  ctx.fillStyle = 'rgba(236,240,255,0.7)';
+  ctx.fillStyle = 'rgba(120,255,170,0.7)';
   ctx.font = `600 40px ${font}`;
   ctx.fillText(`${firstName ? `${firstName}'s` : 'My'} attendance`, 90, 250);
 
@@ -64,7 +64,7 @@ export async function drawShareCard({ firstName, percentage, status, advice }) {
   const r = 270;
   ctx.lineWidth = 44;
   ctx.lineCap = 'round';
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.strokeStyle = 'rgba(0,255,102,0.12)';
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.stroke();
@@ -80,7 +80,7 @@ export async function drawShareCard({ firstName, percentage, status, advice }) {
   ctx.shadowBlur = 0;
 
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffffff';
+  ctx.fillStyle = '#00ff66';
   ctx.font = `800 150px ${font}`;
   ctx.fillText(`${percentage.toFixed(1)}%`, cx, cy + 40);
   ctx.fillStyle = meta.hex;
@@ -88,11 +88,11 @@ export async function drawShareCard({ firstName, percentage, status, advice }) {
   ctx.fillText(meta.headline, cx, cy + 115);
 
   // Advice
-  ctx.fillStyle = 'rgba(236,240,255,0.85)';
+  ctx.fillStyle = 'rgba(120,255,170,0.85)';
   ctx.font = `600 42px ${font}`;
   wrap(ctx, advice, W - 220).slice(0, 3).forEach((line, i) => ctx.fillText(line, cx, 1060 + i * 58));
 
-  ctx.fillStyle = 'rgba(236,240,255,0.45)';
+  ctx.fillStyle = 'rgba(120,255,170,0.45)';
   ctx.font = `500 30px ${font}`;
   ctx.fillText(`Staying above ${ATTENDANCE_TARGET}% with Safe75`, cx, H - 80);
 

@@ -20,10 +20,11 @@ export default function AttendanceMarks({ records, size = 'md', delay = 0 }) {
           className={cn(
             'grid place-items-center rounded-xl font-extrabold',
             size === 'sm' ? 'h-7 w-7 text-sm' : 'h-9 w-9 text-lg',
-            r.isAbsent ? 'bg-danger/10 text-danger-ink' : 'bg-safe/10 text-safe-ink',
+            // Absent = solid red block; present = green outline. Extra = dashed.
+            r.isAbsent ? 'bg-danger text-white shadow-glow-red' : 'bg-transparent text-safe-ink',
             r.isExtra
-              ? cn('border-[1.5px] border-dashed', r.isAbsent ? 'border-danger/60' : 'border-safe/60')
-              : cn('ring-1', r.isAbsent ? 'ring-danger/25' : 'ring-safe/25'),
+              ? cn('border-[1.5px] border-dashed', r.isAbsent ? 'border-black/70' : 'border-a1/70')
+              : cn(!r.isAbsent && 'ring-1 ring-a1/50'),
           )}
           title={`${r.isExtra ? 'Extra lecture' : 'Class'}: ${r.isAbsent ? 'absent' : 'present'}`}
           aria-hidden="true"

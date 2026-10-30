@@ -116,7 +116,7 @@ export default function Calendar({ year, month, direction, onMonthChange, canPre
                           key={r.id}
                           className={cn(
                             'h-[6px] w-[6px] rounded-full',
-                            r.isAbsent ? 'border-[1.5px] border-danger bg-transparent' : 'bg-safe',
+                            r.isAbsent ? 'border-[1.5px] border-danger bg-transparent' : 'bg-a1 shadow-[0_0_6px_rgb(var(--a1)/0.8)]',
                           )}
                         />
                       ))}

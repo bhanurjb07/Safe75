@@ -30,7 +30,7 @@ function Bar({ value, max, tone, delay }) {
         </motion.span>
       )}
       <motion.span
-        className={cn('w-full rounded-t-[4px] rounded-b-[2px]', value === 0 ? 'bg-line/10' : tone === 'absent' ? 'bg-danger' : 'bg-safe')}
+        className={cn('w-full rounded-t-[4px] rounded-b-[2px]', value === 0 ? 'bg-line/10' : tone === 'absent' ? 'bg-danger shadow-glow-red' : 'bg-safe shadow-[0_0_10px_rgb(var(--a1)/0.6)]')}
         initial={{ height: 0 }}
         animate={{ height: h }}
         transition={{ duration: 0.7, ease: EASE_OUT, delay }}

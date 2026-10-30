@@ -7,10 +7,7 @@ import {
   GraduationCap,
   Info,
   LogOut,
-  Monitor,
-  Moon,
   Share2,
-  Sun,
   UserRound,
   X,
 } from 'lucide-react';
@@ -21,10 +18,8 @@ import { useShareCard } from '../hooks/useShareCard.js';
 import { useAlerts } from '../hooks/useAlerts.js';
 import { useAttendanceStore, useSemesterLabel } from '../store/attendanceStore.js';
 import { useAuthStore } from '../store/authStore.js';
-import { useThemeStore } from '../store/themeStore.js';
 import { fadeUp, spring, stagger } from '../utils/motion.js';
 import { cn } from '../utils/status.js';
-import Segmented from './Segmented.jsx';
 
 export const AKTU_RESULT_URL = 'https://erp.aktu.ac.in/';
 
@@ -84,7 +79,6 @@ export default function SideDrawer({ open, onClose }) {
   const { profile, logout } = useAuthStore();
   const semester = useSemesterLabel();
   const hasData = useAttendanceStore((s) => Boolean(s.data));
-  const { mode, setMode } = useThemeStore();
   const share = useShareCard();
   const { unread } = useAlerts();
   const name = profile?.fullName ?? 'Student';
@@ -205,22 +199,9 @@ export default function SideDrawer({ open, onClose }) {
                 <Item icon={Info} label="Contact & About" hint="How Safe75 works, privacy, FAQ" tone="text-a2" onClick={() => go('/about')} />
               </motion.ul>
 
-              <div className="mx-3 my-4 h-px bg-line/10" />
-              <p className="eyebrow mb-2 px-3">Theme</p>
-              <div className="px-3">
-                <Segmented
-                  label="Theme"
-                  size="sm"
-                  className="w-full"
-                  value={mode}
-                  onChange={setMode}
-                  options={[
-                    { value: 'dark', label: 'Dark', icon: Moon },
-                    { value: 'light', label: 'Light', icon: Sun },
-                    { value: 'system', label: 'Auto', icon: Monitor },
-                  ]}
-                />
-              </div>
+              <p className="mt-6 px-3 font-mono text-[11px] text-subtle" aria-hidden="true">
+                [ session: active ] <span className="animate-blink">█</span>
+              </p>
             </div>
 
             <div className="safe-bottom border-t border-line/10 px-3 pt-2">

@@ -1,51 +1,46 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import MatrixRain from './MatrixRain.jsx';
 
 /**
- * Slowly drifting gradient-mesh background. Only transforms animate, so it stays cheap.
- * `parallax` is an optional pair of motion values ({ x, y }) for the login page.
+ * Terminal background: black, a soft green glow, a grid, scanlines, a slow scan bar and a
+ * vignette. `rain` adds falling code (login screen). `parallax` ({ x1, y1, x2, y2 } motion
+ * values) shifts the glow with the cursor.
  */
-export default function Aurora({ parallax, intense = false }) {
+export default function Aurora({ parallax, rain = false }) {
   const reduce = useReducedMotion();
+  const move = (x, y) => (parallax && !reduce ? { x: parallax[x], y: parallax[y] } : undefined);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-      <div className="absolute inset-0 bg-bg" />
-      <motion.div style={parallax && !reduce ? { x: parallax.x1, y: parallax.y1 } : undefined} className="absolute inset-0">
+    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-black">
+      {rain && <MatrixRain opacity={0.28} />}
+      <motion.div style={move('x1', 'y1')} className="absolute inset-0">
         <div
           className="aurora-blob animate-aurora-1"
           style={{
-            width: '60vmax',
-            height: '60vmax',
-            left: '-18vmax',
-            top: '-22vmax',
-            background: 'radial-gradient(circle at center, rgb(var(--a1) / 0.55), transparent 62%)',
-          }}
-        />
-        <div
-          className="aurora-blob animate-aurora-2"
-          style={{
-            width: '52vmax',
-            height: '52vmax',
-            right: '-16vmax',
-            top: '-8vmax',
-            background: 'radial-gradient(circle at center, rgb(var(--a2) / 0.45), transparent 62%)',
+            width: '70vmax',
+            height: '70vmax',
+            left: '-25vmax',
+            top: '-40vmax',
+            background: 'radial-gradient(circle at center, rgb(0 255 102 / 0.16), transparent 62%)',
           }}
         />
       </motion.div>
-      <motion.div style={parallax && !reduce ? { x: parallax.x2, y: parallax.y2 } : undefined} className="absolute inset-0">
+      <motion.div style={move('x2', 'y2')} className="absolute inset-0">
         <div
           className="aurora-blob animate-aurora-2"
           style={{
-            width: '48vmax',
-            height: '48vmax',
-            left: '20vmax',
-            bottom: '-30vmax',
-            background: `radial-gradient(circle at center, rgb(var(--a3) / ${intense ? 0.4 : 0.28}), transparent 62%)`,
+            width: '55vmax',
+            height: '55vmax',
+            right: '-25vmax',
+            bottom: '-35vmax',
+            background: 'radial-gradient(circle at center, rgb(0 255 102 / 0.09), transparent 62%)',
           }}
         />
       </motion.div>
       <div className="bg-grid absolute inset-0" />
-      <div className="noise absolute inset-0" />
+      <div className="scanbar absolute inset-x-0 top-0 animate-scan" />
+      <div className="scanlines absolute inset-0" />
+      <div className="vignette absolute inset-0" />
     </div>
   );
 }

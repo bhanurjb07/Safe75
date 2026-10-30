@@ -23,21 +23,46 @@ export default {
         'warn-ink': token('warn-ink'),
         danger: token('danger'),
         'danger-ink': token('danger-ink'),
+        // Terminal theme: "white" is the ink used on solid green (accent buttons, avatars),
+        // so text-white / bg-white render black. Keeps the UI to green and black only.
+        white: token('on-accent'),
       },
       fontFamily: {
-        sans: ['"Plus Jakarta Sans Variable"', '"Plus Jakarta Sans"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['"JetBrains Mono Variable"', '"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+        mono: ['"JetBrains Mono Variable"', '"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
       },
+      // Sharper, HUD-like corners everywhere.
       borderRadius: {
-        '4xl': '2rem',
+        lg: '0.3rem',
+        xl: '0.375rem',
+        '2xl': '0.45rem',
+        '3xl': '0.55rem',
+        '4xl': '0.7rem',
       },
       boxShadow: {
         glass: 'var(--glass-shadow)',
-        glow: '0 10px 40px -12px rgb(var(--a1) / 0.65)',
-        'glow-safe': '0 10px 40px -12px rgb(var(--safe) / 0.6)',
-        'glow-warn': '0 10px 40px -12px rgb(var(--warn) / 0.6)',
-        'glow-danger': '0 10px 40px -12px rgb(var(--danger) / 0.65)',
+        glow: '0 0 0 1px rgb(var(--a1) / 0.6), 0 0 24px -4px rgb(var(--a1) / 0.65)',
+        'glow-safe': '0 0 32px -10px rgb(var(--safe) / 0.55)',
+        'glow-warn': '0 0 32px -10px rgb(var(--warn) / 0.55)',
+        'glow-danger': '0 0 0 1px rgb(var(--danger) / 0.35), 0 0 36px -8px rgb(var(--danger) / 0.6)',
+        'glow-red': '0 0 14px -2px rgb(var(--danger) / 0.75)',
       },
       keyframes: {
+        blink: {
+          '0%, 49%': { opacity: '1' },
+          '50%, 100%': { opacity: '0' },
+        },
+        flicker: {
+          '0%, 100%': { opacity: '1' },
+          '92%': { opacity: '1' },
+          '93%': { opacity: '0.82' },
+          '94%': { opacity: '1' },
+          '97%': { opacity: '0.9' },
+        },
+        scan: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100vh)' },
+        },
         shimmer: {
           '0%': { transform: 'translateX(-100%)' },
           '100%': { transform: 'translateX(100%)' },
@@ -65,6 +90,9 @@ export default {
         },
       },
       animation: {
+        blink: 'blink 1.05s steps(1) infinite',
+        flicker: 'flicker 6s linear infinite',
+        scan: 'scan 7s linear infinite',
         shimmer: 'shimmer 1.6s infinite',
         'aurora-1': 'aurora-1 22s ease-in-out infinite alternate',
         'aurora-2': 'aurora-2 26s ease-in-out infinite alternate',

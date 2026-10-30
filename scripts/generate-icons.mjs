@@ -23,10 +23,10 @@ const chunk = (type, data) => {
 };
 
 const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
-const INDIGO = [99, 102, 241];
-const VIOLET = [139, 92, 246];
-const CYAN = [34, 211, 238];
-const INK = [11, 16, 38];
+const NEON = [0, 255, 102];
+const GREEN = [0, 224, 90];
+const PALE = [150, 255, 190];
+const INK = [0, 0, 0];
 
 function render(size, { maskable }) {
   const row = size * 4 + 1;
@@ -47,15 +47,15 @@ function render(size, { maskable }) {
       const dy = Math.max(Math.abs(py) - (c - corner), 0);
       const outside = Math.hypot(dx, dy) - corner;
       const alpha = Math.max(0, Math.min(1, 0.5 - outside));
-      let col = mix(INK, [24, 20, 70], (x + y) / (2 * size));
+      let col = mix(INK, [0, 24, 10], (x + y) / (2 * size));
       const ringDist = Math.abs(Math.hypot(px, py) - radius) - stroke / 2;
       const ringA = Math.max(0, Math.min(1, 0.5 - ringDist));
       if (ringA > 0) {
         let ang = Math.atan2(px, -py); // 0 at the top, clockwise
         if (ang < 0) ang += Math.PI * 2;
         const t = ang / (Math.PI * 2);
-        let ringCol = [40, 44, 80];
-        if (t <= 0.75) ringCol = t < 0.4 ? mix(INDIGO, VIOLET, t / 0.4) : mix(VIOLET, CYAN, (t - 0.4) / 0.35);
+        let ringCol = [0, 60, 25];
+        if (t <= 0.75) ringCol = t < 0.4 ? mix(NEON, GREEN, t / 0.4) : mix(GREEN, PALE, (t - 0.4) / 0.35);
         col = mix(col, ringCol, ringA);
       }
       raw[i] = col[0];

@@ -11,7 +11,12 @@ export default function PageHeader({ eyebrow, title, description, actions }) {
     >
       <div>
         {eyebrow && <p className="eyebrow mb-1">{eyebrow}</p>}
-        <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">{title}</h1>
+        <h1 className="term-cursor text-2xl font-extrabold tracking-tight sm:text-3xl">
+          <span className="mr-2 text-subtle" aria-hidden="true">
+            &gt;
+          </span>
+          {title}
+        </h1>
         {description && <p className="mt-1 max-w-xl text-sm text-muted">{description}</p>}
       </div>
       {actions}

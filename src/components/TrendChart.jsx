@@ -87,7 +87,7 @@ export default function TrendChart({ data, height = 200, target = ATTENDANCE_TAR
               strokeWidth={2}
               fill={`url(#fill-${id})`}
               dot={false}
-              activeDot={{ r: 5, strokeWidth: 2, stroke: c.resolved === 'dark' ? '#0b1026' : '#ffffff', fill: c.a2 }}
+              activeDot={{ r: 5, strokeWidth: 2, stroke: '#000000', fill: c.a2 }}
               animationDuration={1300}
               animationEasing="ease-out"
             />

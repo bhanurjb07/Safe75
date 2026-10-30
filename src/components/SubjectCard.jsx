@@ -33,7 +33,7 @@ export function NeedBadge({ subject, className = '' }) {
     : subject.canSkip > 0
       ? `Skip ${subject.canSkip}`
       : 'No skips';
-  const tone = need ? 'border-danger/40 bg-danger/10 text-danger-ink' : subject.canSkip > 0 ? 'border-safe/40 bg-safe/10 text-safe-ink' : 'border-warn/40 bg-warn/10 text-warn-ink';
+  const tone = need ? 'border-danger bg-danger text-white shadow-glow-red' : subject.canSkip > 0 ? 'border-safe/40 bg-safe/10 text-safe-ink' : 'border-warn/40 bg-warn/10 text-warn-ink';
   return (
     <span className={cn('inline-flex shrink-0 items-center gap-1.5 rounded-xl border px-2.5 py-1.5 text-sm font-semibold', tone, className)}>
       <Icon className="h-4 w-4" aria-hidden="true" />

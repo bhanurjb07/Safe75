@@ -3,14 +3,15 @@ import { KEYS } from '../utils/storage.js';
 
 const media = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null;
 
-const resolve = (mode) => (mode === 'system' ? (media?.matches ? 'dark' : 'light') : mode);
+// The terminal theme is dark-only; the mode is kept so the store's API stays the same.
+const resolve = () => 'dark';
 
 function apply(mode) {
   const resolved = resolve(mode);
   const root = document.documentElement;
   root.classList.toggle('dark', resolved === 'dark');
   root.style.colorScheme = resolved;
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolved === 'dark' ? '#060918' : '#f4f6ff');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#000000');
   return resolved;
 }
 

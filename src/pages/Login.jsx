@@ -137,7 +137,7 @@ export default function Login() {
       exit={{ opacity: 0, scale: 1.02, filter: 'blur(8px)', transition: { duration: 0.35 } }}
       className="relative grid min-h-dvh overflow-x-clip lg:grid-cols-[1.1fr_1fr]"
     >
-      <Aurora parallax={parallax} intense />
+      <Aurora parallax={parallax} rain />
 
       {/* Hero */}
       <motion.section
@@ -149,8 +149,8 @@ export default function Login() {
         <motion.div variants={fadeUp}>
           <Logo size={40} />
         </motion.div>
-        <motion.h1 variants={fadeUp} className="mt-10 text-5xl font-extrabold leading-[1.05] tracking-tight xl:text-6xl">
-          Stay safe above <span className="text-gradient">{ATTENDANCE_TARGET}%</span>.
+        <motion.h1 variants={fadeUp} className="term-cursor mt-10 text-4xl font-extrabold leading-[1.1] tracking-tight xl:text-5xl">
+          Stay safe above <span className="text-gradient">{ATTENDANCE_TARGET}%</span>
         </motion.h1>
         <motion.p variants={fadeUp} className="mt-4 max-w-md text-lg text-muted">
           Your college attendance, beautifully clear. Am I safe? How many can I skip? How many must I attend?
@@ -175,19 +175,27 @@ export default function Login() {
         <motion.div initial="hidden" animate="show" variants={stagger(0.08, 0.15)} className="w-full max-w-md">
           <motion.div variants={fadeUp} className="mb-8 text-center lg:hidden">
             <Logo size={44} className="justify-center" />
-            <h1 className="mt-6 text-3xl font-extrabold tracking-tight">
+            <h1 className="term-cursor mt-6 text-2xl font-extrabold tracking-tight sm:text-3xl">
               Stay safe above <span className="text-gradient">{ATTENDANCE_TARGET}%</span>
             </h1>
             <p className="mt-2 text-sm text-muted">Your attendance, at a glance.</p>
           </motion.div>
 
           <motion.div variants={fadeUp}>
-          <motion.div animate={shake} className="card p-6 sm:p-8">
+          <motion.div animate={shake} className="card bg-black/90 p-5 sm:p-8">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-a2/70 to-transparent"
             />
-            <h2 className="text-xl font-bold">Sign in with your ERP account</h2>
+            <p className="mb-4 flex items-center gap-2 border-b border-a1/20 pb-3 font-mono text-xs text-subtle" aria-hidden="true">
+              <span className="flex gap-1">
+                <span className="h-2 w-2 rounded-full bg-a1" />
+                <span className="h-2 w-2 rounded-full bg-a1/50" />
+                <span className="h-2 w-2 rounded-full bg-a1/25" />
+              </span>
+              <span className="truncate">safe75@erp:~$ <span className="text-fg">login</span></span>
+            </p>
+            <h2 className="text-lg font-bold sm:text-xl">Sign in with your ERP account</h2>
             <p className="mt-1 text-sm text-muted">Use the same username and password as your college ERP.</p>
 
             <AnimatePresence>
